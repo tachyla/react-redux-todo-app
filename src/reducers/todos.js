@@ -1,5 +1,5 @@
 import uuid from 'uuid/v4';
-import { CREATE_TODO } from '../actions/todos';
+import { CREATE_TODO, COMPLETED_TODO } from '../actions/todos';
 
 //create a reducer
 export default (state = [], action) => {
@@ -12,8 +12,16 @@ export default (state = [], action) => {
                     text: action.text,
                     completed: false,
                 }
-            ] 
-
+            ]
+        case COMPLETED_TODO:
+            return state.map(todo => 
+                (todo.id === action.id 
+                    ? {
+                        ...todo,
+                        completed: !todo.completed
+                    }
+                    : todo),
+                    );
         default:
             return state;
     }
