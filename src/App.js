@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
+
+import {createTodo} from './actions/todos';
+
 import './App.css';
 
 class App extends Component {
@@ -6,6 +10,13 @@ class App extends Component {
   state = {
     text: ''
   }
+handleSubmit = e => {
+  e.preventDefault();
+  this.props.createTodo(this.state.text);
+  this.setState({
+    text: ''
+  })
+}
 
   enterText = e => {
     // console.log(e.target);
@@ -18,16 +29,27 @@ class App extends Component {
   render() {
     return (
       <div className='App'>
-        <form className="App-Intro" >
+        <form className="App-Intro"
+              onSubmit={this.handleSubmit} >
+
           <input value={this.state.text} 
                  onChange={this.enterText} 
                  type='text' 
                  name='text' 
                  placeholder='Create a todo...'/>
         </form>
+        <br/>
+        {/*{this.props.todos.map(todo => (*/}
+           {this.props.todos.map(({text, id}) => (
+          <div key={id}>
+            {text}
+          </div>
+        ))}
       </div>
     );
   }
 }
 
-export default App;
+export default connect(state => ({
+  todos: state.todos
+}), { createTodo })(App);
